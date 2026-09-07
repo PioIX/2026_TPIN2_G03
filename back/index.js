@@ -1,75 +1,77 @@
-const express = require("express");
-const cors = require("cors");
-const session = require("express-session");
-const { Server } = require("socket.io");
+var express = require('express'); //Tipo de servidor: Express
+var bodyParser = require('body-parser'); //Convierte los JSON
+var cors = require('cors');
+const MySQL = require('./modulos/mysql');
 
-const app = express();
-const PORT = process.env.PORT || 4000;
-
+var app = express();
+var port = process.env.PORT || 4000;
 app.use(cors());
-app.use(express.json());
 
-const sessionMiddleware = session({
-  secret: "supersarasa",
-  resave: false,
-  saveUninitialized: false,
-});
-app.use(sessionMiddleware);
 
-const server = app.listen(PORT, () => {
-  console.log(`Servidor NodeJS corriendo en http://localhost:${PORT}/`);
-});
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.json());
 
-const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:3000", "http://localhost:3001"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  },
+
+app.get('/', function(req, res){
+	res.status(200).send({
+		message: `Hola`
+	});
 });
 
-io.use((socket, next) => {
-  sessionMiddleware(socket.request, {}, next);
+
+app.post('/', async function(req, res){
+	try {
+		console.log(req.body);
+		existe = await MySQL.realizarQuery(`SELECT * FROM  WHERE ;`)
+		if (existe.length===0){e
+			await MySQL.realizarQuery(`INSERT INTO 
+			VALUES ();`)
+
+		}else{
+			res.send({message: " ya existe"})
+		};
+	} catch (error) {
+		console.log('Error:', error.message)
+		res.status(500).send({
+			message: "Error"
+		});
+
+	}
 });
 
-let contador = 0;
 
-io.on("connection", (socket) => {
-  const req = socket.request;
+app.delete('/', async function(req, res){
+	try {
+		await MySQL.realizarQuery(`DELETE FROM  WHERE;`)
+	} catch (error) {
+		console.log('Error:', error.message)
+		res.status(500).send({
+			message: "Error"
+		});
+	}
+});
 
-  socket.on("joinRoom", (data) => {
-    if (req.session.room != undefined && req.session.room.length > 0) {
-      socket.leave(req.session.room);
-    }
-    req.session.room = data.room;
-    socket.join(req.session.room);
 
-    io.to(req.session.room).emit("chat-messages", {
-      user: req.session.user,
-      room: req.session.room,
-    });
-  });
 
-  socket.on("pingAll", (data) => {
-    console.log("PING ALL:", data);
-    io.emit("pingAll", { event: "Ping to all", message: data });
-  });
+app.put('/', async function(req, res){
+try {
+		let x=req.body.x
+				if(x){
+			await MySQL.realizarQuery(`UPDATE  SET 
+			x = "" WHERE ;`)
+		}
+		
+} catch (error) {
+	console.log('Error:', error.message)
+	res.status(500).send({
+		message: "Error"
+	});
+}
+});
 
-  socket.on("sendMessage", (data) => {
-    console.log("Message recieved")
-    io.to(req.session.room).emit("newMessage", {
-      room: req.session.room,
-      message: data.message,
-    });
-  });
 
-  socket.on("contador", () => {
-    console.log("contador recibido")
-    contador++;
-    socket.emit("emitcontador", { contador });
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Disconnect");
-  });
+app.listen(port, function(){
+	console.log(`Server running in http://localhost:${port}`);
+	console.log('Defined routes:');
+	console.log('[GET] http://localhost:4000/');
 });

@@ -5,9 +5,8 @@
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "build": "pkg . --targets node18-win-x64 --output build/backend-tp2.exe"
+   "pio": "nodemon --env-file=.pio.env index.js",
+    "home": "nodemon --env-file=.home.env index.js"
   },
   "keywords": [
     "socket.io",
@@ -15,7 +14,7 @@
     "nextjs",
     "backend"
   ],
-  "author": "Ing. Pablo Morandi",
+  "author": "Grupo 03",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
