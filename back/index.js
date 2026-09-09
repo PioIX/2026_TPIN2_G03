@@ -43,6 +43,7 @@ app.get('/Usuarios', async function(req, res){
 	}
 });
 
+
 app.get('/UsuariosEnGrupo', async function(req, res){
 	try {
 		let grupo_id=req.query.grupo_id
