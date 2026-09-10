@@ -168,7 +168,7 @@ app.post('/Mensaje', async function(req, res){
 		try {
 			console.log(req.body);
 			await MySQL.realizarQuery(`INSERT INTO Mensajes(contenido,email,grupo_id)
-			VALUES ("${req.body.contenido}","${req.body.email}"),${req.body.grupo_id};`)
+			VALUES ("${req.body.contenido}","${req.body.email}",${req.body.grupo_id});`)
 	
 			
 		} catch (error) {
@@ -298,7 +298,23 @@ try {
 }
 });
 
-//falta put de los mensajes y posiblemente poder buscar chats por LIKE
+
+app.put('/Mensaje', async function(req, res){
+try {
+		let contenido=req.body.contenido
+		let id=req.body.id
+		if(contenido){
+			await MySQL.realizarQuery(`UPDATE Mensajes SET contenido = "${contenido}" WHERE id=${id};`)
+		}
+				
+		
+} catch (error) {
+	console.log('Error:', error.message)
+	res.status(500).send({
+		message: "Error"
+	});
+}
+});
 
 app.listen(port, function(){
 	console.log(`Server running in http://localhost:${port}`);

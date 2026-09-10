@@ -2,181 +2,348 @@
 import { useState, useEffect } from 'react';
 
 export function getUsuarios(){
-    let res={}
-       return fetch('http://localhost:4000/usuarios')
+        return fetch('http://localhost:4000/usuarios')
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            res=data.message
-           
+            return data.message
     });
 }
 
-//hace falta arreglar los otros fetch 
+
 export function getUsuarioporEmail(email){
-    const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/usuarios?email=${email}`)
+   
+        return fetch(`http://localhost:4000/usuarios?email=${email}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
 }
 export function getUsuariosPorNombre(nombre){
-    const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/usuarios?nombre=${nombre}`)
+  
+        return fetch(`http://localhost:4000/usuarios?nombre=${nombre}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 export function getGrupos(){
-const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/grupos`)
+  
+        return fetch(`http://localhost:4000/grupos`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 export function getGrupoPorID(id){
-const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/grupos?id=${id}`)
+  
+        return fetch(`http://localhost:4000/grupos?id=${id}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 export function getGruposPorNombre(nombre){
-    const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/grupos?nombre=${nombre}`)
+  
+        return fetch(`http://localhost:4000/grupos?nombre=${nombre}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 
 }
 export function getUsuariosEnGrupo(){
-const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/usuariosengrupo`)
+  
+        return fetch(`http://localhost:4000/usuariosengrupo`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 export function getMiembrosDeGrupo(grupo_id){
-const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/usuariosengrupo?grupo_id=${grupo_id}`)
+  
+        return fetch(`http://localhost:4000/usuariosengrupo?grupo_id=${grupo_id}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 export function getGruposDeUsuario(email){
-    const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/usuariosengrupo?email=${email}`)
+  
+        return fetch(`http://localhost:4000/usuariosengrupo?email=${email}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 
 }
 export function getMensajes(){
-     const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/mensajes`)
+  
+        return fetch(`http://localhost:4000/mensajes`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 export function getMensajesPorID(id){
-  const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/mensajes?id=${id}`)
+  
+        return fetch(`http://localhost:4000/mensajes?id=${id}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 export function getMensajesPorContenido(contenido){
-  const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/mensajes?contenido=${contenido}`)
+  
+        return fetch(`http://localhost:4000/mensajes?contenido=${contenido}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 export function getMensajesPorUsuario(email){
-  const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/mensajes?email=${email}`)
+  
+        return fetch(`http://localhost:4000/mensajes?email=${email}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 export function getMensajesPorGrupo(grupo_id){
-  const [res,setRes]=useState({})
-    useEffect(() => {
-        fetch(`http://localhost:4000/mensajes?grupo_id=${grupo_id}`)
+  
+        return fetch(`http://localhost:4000/mensajes?grupo_id=${grupo_id}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); 
-            setRes(data.mensaje);
-            return res;
+            return data.message;
     });
-    }, []);
+  
 }
 
 
+export function registro(usuario){
+   try {
+     fetch('http://localhost:4000/Registro', {
+         method: 'POST',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(usuario)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Usuario creado:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
+
+export function crearChat(datos){
+   try {
+     fetch('http://localhost:4000/Grupo', {
+         method: 'POST',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(datos)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Chat creado:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
+
+export function crearMensaje(mensaje){
+   try {
+     fetch('http://localhost:4000/Mensaje', {
+         method: 'POST',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(mensaje)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Mensaje creado:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
+
+
+export function unirAlChat(datos){
+   try {
+     fetch('http://localhost:4000/UnirAlGrupo', {
+         method: 'POST',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(datos)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Usuario añadido:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
 
 
 
+export function actualizarUsuario(datos){
+   try {
+     fetch('http://localhost:4000/Usuario', {
+         method: 'PUT',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(datos)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Usuario actualizado:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
+
+export function actualizarChat(datos){
+   try {
+     fetch('http://localhost:4000/Grupo', {
+         method: 'PUT',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(datos)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Chat actualizado:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
+
+export function actualizarMensaje(datos){
+   try {
+     fetch('http://localhost:4000/Mensaje', {
+         method: 'PUT',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(datos)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Chat actualizado:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
 
 
+export function sacarDelGrupo(datos){
+   try {
+     fetch('http://localhost:4000/UsuarioDeGrupo', {
+         method: 'DELETE',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(datos)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Usuario sacado del grupo:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
 
 
+export function eliminarUsuario(datos){
+   try {
+     fetch('http://localhost:4000/Usuario', {
+         method: 'DELETE',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(datos)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Usuario eliminado:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
+
+
+export function eliminarGrupo(datos){
+   try {
+     fetch('http://localhost:4000/Grupo', {
+         method: 'DELETE',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(datos)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Usuario sacado del grupo:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
+
+export function eliminarMensaje(datos){
+   try {
+     fetch('http://localhost:4000/Mensaje', {
+         method: 'DELETE',
+         headers: {
+         'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(datos)
+     })
+     .then(response => response.json())
+     .then(data => {
+     console.log('Usuario sacado del grupo:', data);
+     });
+   } catch (error) {
+        console.log(error)
+   }
+};
