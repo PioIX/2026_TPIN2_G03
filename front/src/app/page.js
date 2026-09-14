@@ -14,14 +14,14 @@ useEffect(()=>{
     setUs(data)
     setLoading(false)
   })
-},[])
+},[loading])
 
   return (
     <>
     <p>AAAA</p>
     <p></p>
     {(loading)?(<p>cargando..</p>):(<p>{JSON.stringify(us,null,2)}</p>)}
-    <button onClick={()=>{fetch.crearMensaje({contenido: "hola soy del fetch",email:"a@gmail.com",grupo_id:1})}}></button>
+    <button onClick={()=>{fetch.crearMensaje({contenido: "hola soy del fetch",email:"a@gmail.com",grupo_id:1}).then(()=>(setLoading(true)))}}></button>
     </>
   );
 }

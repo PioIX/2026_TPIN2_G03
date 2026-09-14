@@ -1,5 +1,4 @@
 "use client"
-import { useState, useEffect } from 'react';
 
 export function getUsuarios(){
         return fetch('http://localhost:4000/usuarios')
@@ -146,7 +145,7 @@ export function getMensajesPorGrupo(grupo_id){
 
 export function registro(usuario){
    try {
-     fetch('http://localhost:4000/Registro', {
+     return fetch('http://localhost:4000/Registro', {
          method: 'POST',
          headers: {
          'Content-Type': 'application/json'
@@ -164,7 +163,7 @@ export function registro(usuario){
 
 export function crearChat(datos){
    try {
-     fetch('http://localhost:4000/Grupo', {
+     return fetch('http://localhost:4000/Grupo', {
          method: 'POST',
          headers: {
          'Content-Type': 'application/json'
@@ -182,7 +181,7 @@ export function crearChat(datos){
 
 export function crearMensaje(mensaje){
    try {
-     fetch('http://localhost:4000/Mensaje', {
+     return fetch('http://localhost:4000/Mensaje', {
          method: 'POST',
          headers: {
          'Content-Type': 'application/json'
@@ -201,7 +200,7 @@ export function crearMensaje(mensaje){
 
 export function unirAlChat(datos){
    try {
-     fetch('http://localhost:4000/UnirAlGrupo', {
+     return fetch('http://localhost:4000/UnirAlGrupo', {
          method: 'POST',
          headers: {
          'Content-Type': 'application/json'
@@ -221,7 +220,7 @@ export function unirAlChat(datos){
 
 export function actualizarUsuario(datos){
    try {
-     fetch('http://localhost:4000/Usuario', {
+     return fetch('http://localhost:4000/Usuario', {
          method: 'PUT',
          headers: {
          'Content-Type': 'application/json'
@@ -239,7 +238,7 @@ export function actualizarUsuario(datos){
 
 export function actualizarChat(datos){
    try {
-     fetch('http://localhost:4000/Grupo', {
+     return fetch('http://localhost:4000/Grupo', {
          method: 'PUT',
          headers: {
          'Content-Type': 'application/json'
@@ -257,7 +256,7 @@ export function actualizarChat(datos){
 
 export function actualizarMensaje(datos){
    try {
-     fetch('http://localhost:4000/Mensaje', {
+     return fetch('http://localhost:4000/Mensaje', {
          method: 'PUT',
          headers: {
          'Content-Type': 'application/json'
@@ -276,7 +275,7 @@ export function actualizarMensaje(datos){
 
 export function sacarDelGrupo(datos){
    try {
-     fetch('http://localhost:4000/UsuarioDeGrupo', {
+     return fetch('http://localhost:4000/UsuarioDeGrupo', {
          method: 'DELETE',
          headers: {
          'Content-Type': 'application/json'
@@ -295,7 +294,7 @@ export function sacarDelGrupo(datos){
 
 export function eliminarUsuario(datos){
    try {
-     fetch('http://localhost:4000/Usuario', {
+     return fetch('http://localhost:4000/Usuario', {
          method: 'DELETE',
          headers: {
          'Content-Type': 'application/json'
@@ -314,7 +313,7 @@ export function eliminarUsuario(datos){
 
 export function eliminarGrupo(datos){
    try {
-     fetch('http://localhost:4000/Grupo', {
+     return fetch('http://localhost:4000/Grupo', {
          method: 'DELETE',
          headers: {
          'Content-Type': 'application/json'
@@ -332,7 +331,7 @@ export function eliminarGrupo(datos){
 
 export function eliminarMensaje(datos){
    try {
-     fetch('http://localhost:4000/Mensaje', {
+     return fetch('http://localhost:4000/Mensaje', {
          method: 'DELETE',
          headers: {
          'Content-Type': 'application/json'
