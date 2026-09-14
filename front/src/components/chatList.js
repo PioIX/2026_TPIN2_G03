@@ -1,9 +1,9 @@
 import clsx from "clsx";
-import styles from "./chatItem.module.css";
-import chatItem from "./chatItem";
+import styles from "./chatItem.module.css   ";
+import ChatItem from "@/components/chatItem";
 export default function chatList({chats}) {
     const chatJSX=chats.map((chat, ind)=>(
-        <chatItem foto={chat.foto} nombre={chat.nombre} key={ind}></chatItem>
+        <ChatItem foto={chat.foto} nombre={chat.nombre} key={ind}></ChatItem>
 
     ))
   return (
