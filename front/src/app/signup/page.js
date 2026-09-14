@@ -1,33 +1,69 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as fetch from "@/hooks/fetch.js"
 
 export default function SignupPage() {
 
     const [mensajeCorreo, setMensajeCorreo] = useState("")
     const [mensajeContrasena, setMensajeContrasena] = useState("")
     const [mensajeUsuario, setMensajeUsuario] = useState("")
+    const [mensajeTelefono, setMensajeTelefono] = useState("")
     const [correo, setCorreo] = useState("");
     const [contrasena, setContrasena] = useState("");
     const [usuario, setUsuario] = useState("")
     const [pfp, setPfp] = useState("")
+    const [telefono, setTelefono] = useState("")
+    const [arrayUsuarios, setArrayUsuarios] = useState([])
+    let i = 0
+
+    useEffect(()=>{
+        fetch.getUsuarios()
+        .then((data)=>{
+            setArrayUsuarios(data)
+        })
+    }, [])
+
+    useEffect(()=>{
+        console.log(arrayUsuarios)
+    }, [arrayUsuarios])
+
+    /*FUNCIONONONONOINDOIASNIODNASKOJNDASKLJLD*/
+    function incluyeCorreo() {
+        for (i=0;i<arrayUsuarios.length;i++) {
+            if(arrayUsuarios[i].email.includes(correo) == true){
+                console.log("Hay un mail igual")
+                return(true)
+            } else{
+                console.log("No hay un mail igual")
+                return(false)
+            }
+        }
+    }
 
     function enviarSign(event) {
+        /* mensajes*/
         if (contrasena == "") {
             setMensajeContrasena("no valido")
         } else {
             setMensajeContrasena("valido")
         }
-        if (correo == "" /*|| llamar a la funcion para que corrobore que no esta repetido el mail*/) {
+        if (correo == "" || incluyeCorreo() == true) {
             setMensajeCorreo("no valido")
         } else {
             setMensajeCorreo("valido")
+        }
+        if (telefono == "" || arrayUsuarios.includes(telefono) == true) {
+            setMensajeTelefono("no valido")
+        } else {
+            setMensajeTelefono("valido")
         }
         if (usuario == "") {
             setMensajeUsuario("no valido")
         } else {
             setMensajeUsuario("valido")
         }
+        /* pfp*/
         if (pfp == ""){
             setPfp("default.png")
         } else if (pfp == "1") {
@@ -39,8 +75,8 @@ export default function SignupPage() {
         } else if (pfp == "4") {
             setPfp("pfp4.png")
         }
-
-        if (usuario !== "" && contrasena !== "" && correo !== "" /*&& llamar a la funcion para que corrobore que no esta repetido el mail*/){
+        /* comprobacion para el post*/
+        if (telefono !== "" && arrayUsuarios.includes(telefono) == false && usuario !== "" && contrasena !== "" && correo !== "" && arrayUsuarios.includes(correo) == false){
             //aca con post a la BDD
         }
     }
@@ -51,6 +87,8 @@ export default function SignupPage() {
             <p>{mensajeCorreo}</p>
             <input placeholder="Establezca una contraseña" value={contrasena} onChange={(event)=>{setContrasena(event.target.value)}}></input>
             <p>{mensajeContrasena}</p>
+            <input placeholder='Establezca un numero telefonico' value={telefono} onChange={(event)=>{setTelefono(event.target.value)}}></input>
+            <p>{mensajeTelefono}</p>
             <input placeholder="Establezca un nombre de usuario" value={usuario} onChange={(event)=>{setUsuario(event.target.value)}}></input>
             <p>{mensajeUsuario}</p>
             <input placeholder="Establezca una foto de perfil segun su numero" value={pfp} onChange={(event)=>{setPfp(event.target.value)}}></input>
