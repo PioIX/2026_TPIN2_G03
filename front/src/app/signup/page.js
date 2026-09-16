@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import * as fetch from "@/hooks/fetch.js"
 
 export default function SignupPage() {
-
     const [mensajeCorreo, setMensajeCorreo] = useState("")
     const [mensajeContrasena, setMensajeContrasena] = useState("")
     const [mensajeUsuario, setMensajeUsuario] = useState("")
@@ -15,6 +14,7 @@ export default function SignupPage() {
     const [pfp, setPfp] = useState("")
     const [telefono, setTelefono] = useState("")
     const [arrayUsuarios, setArrayUsuarios] = useState([])
+
     let i = 0
 
     useEffect(()=>{
@@ -28,14 +28,25 @@ export default function SignupPage() {
         console.log(arrayUsuarios)
     }, [arrayUsuarios])
 
-    /*FUNCIONONONONOINDOIASNIODNASKOJNDASKLJLD*/
-    function incluyeCorreo() {
+    function IncluyeCorreo() {
         for (i=0;i<arrayUsuarios.length;i++) {
-            if(arrayUsuarios[i].email.includes(correo) == true){
+            if (arrayUsuarios[i].email.includes(correo) == true) {
                 console.log("Hay un mail igual")
                 return(true)
             } else{
                 console.log("No hay un mail igual")
+                return(false)
+            }
+        }
+    }
+
+    function IncluyeTelefono() {
+        for (i=0;i<arrayUsuarios.length;i++) {
+            if (Array(String(arrayUsuarios[i].numero)).includes(String(telefono)) == true) {
+                console.log("Hay un numero igual")
+                return(true)
+            } else{
+                console.log("No hay un numero igual")
                 return(false)
             }
         }
@@ -48,12 +59,12 @@ export default function SignupPage() {
         } else {
             setMensajeContrasena("valido")
         }
-        if (correo == "" || incluyeCorreo() == true) {
+        if (correo == "" || IncluyeCorreo() == true) {
             setMensajeCorreo("no valido")
         } else {
             setMensajeCorreo("valido")
         }
-        if (telefono == "" || arrayUsuarios.includes(telefono) == true) {
+        if (telefono == "" || IncluyeTelefono() == true) {
             setMensajeTelefono("no valido")
         } else {
             setMensajeTelefono("valido")
@@ -76,7 +87,7 @@ export default function SignupPage() {
             setPfp("pfp4.png")
         }
         /* comprobacion para el post*/
-        if (telefono !== "" && arrayUsuarios.includes(telefono) == false && usuario !== "" && contrasena !== "" && correo !== "" && arrayUsuarios.includes(correo) == false){
+        if (telefono !== "" && IncluyeTelefono() == false && usuario !== "" && contrasena !== "" && correo !== "" && IncluyeCorreo() == false){
             //aca con post a la BDD
         }
     }
