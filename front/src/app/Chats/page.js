@@ -5,6 +5,7 @@ import Link from "next/link";
 import ChatList from "@/components/chatList"
 import { useFormState } from "react-dom";
 import * as fetch from "@/hooks/fetch.js"
+import Newpopup from '@/components/newpopup';
 
 export default function ChatPage() {
     
@@ -13,6 +14,7 @@ const [usuario,setUsuario]=useState({})
 const [loading,setLoading]=useState(true)
 const [chats,setChats]=useState([])
 const [grupos,setGrupos]=useState([])
+const [newChat,setNewChat]=useState("")
 
 const searchParams = useSearchParams();
 const userE = searchParams.get("usuario")
@@ -37,20 +39,36 @@ useEffect(()=>{
 
 
 useEffect(()=>{
-console.log(grupos)
-let ch=[]
-grupos.map((grupo)=>{
-    fetch.getGrupoPorID(grupo.grupo_id)
-    .then((data)=>{
-        ch.push(data[0])
-        console.log(data[0])
-    })
-})
-
-console.log(ch)
-setChats(ch)
-setLoading(false)
+  console.log(grupos)
+  grupos.map((grupo)=>{
+      fetch.getGrupoPorID(grupo.grupo_id)
+      .then((data)=>{
+          console.log(data[0])
+          setChats([...chats,data[0]])
+      })
+  })
+  setLoading(false)
 },[grupos,loading])
+
+
+function crearChat(single){
+  if(single){
+    fetch.getUsuarioporEmail(newChat)
+    .then((data)=>{
+      console.log(data)
+      if (!data || data.length===0){
+        //dar error
+        return
+      }else{
+        crearChat({nombre:data.nombre,foto:data.foto_perfil})
+      }
+    })
+  }else{
+    //falta poder crear grupo y testear creación de chats + manejo de popups
+  }
+}
+
+
 
   return (
     <>
@@ -60,9 +78,14 @@ setLoading(false)
         (<h1>Hubo un error</h1>):
         ( <>
            <ChatList chats={chats}></ChatList>
-           <button>Crear nuevo chat</button>
-           <button>Crear nuevo grupo</button>
-     
+           
+           <Newpopup triggertext={"trigger"} >
+          <h1>Ingresar el email del usuario</h1>
+          <input placeholder="ejemplo@gmail.com" type="text" onChange={(event)=>{setNewChat(event.target.value)}} value={newChat}></input>
+          <br></br>
+          <button onClick={()=>{crearChat(true)}}>Crear Chat</button>
+           <br></br>
+           </Newpopup>
            </>)
           
          

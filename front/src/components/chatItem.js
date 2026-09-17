@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import styles from "./chatItem.module.css";
+import styles from "@/components/chatItem.module.css";
 //arreglar module not found
 export default function chatItem({foto,nombre}) {
 
