@@ -5,13 +5,14 @@ import * as fetch from "@/hooks/fetch.js"
 
 export default function SignupPage() {
     const [mensajeCorreo, setMensajeCorreo] = useState("")
-    const [mensajeContrasena, setMensajeContrasena] = useState("")
+    const [mensajeClave, setMensajeClave] = useState("")
     const [mensajeUsuario, setMensajeUsuario] = useState("")
     const [mensajeTelefono, setMensajeTelefono] = useState("")
+    const [mensajePfp, setMensajePfp] = useState("")
     const [correo, setCorreo] = useState("");
-    const [contrasena, setContrasena] = useState("");
+    const [clave, setclave] = useState("");
     const [usuario, setUsuario] = useState("")
-    const [pfp, setPfp] = useState("")
+    const [pfp, setPfp] = useState("default.png")
     const [telefono, setTelefono] = useState("")
     const [arrayUsuarios, setArrayUsuarios] = useState([])
 
@@ -54,10 +55,10 @@ export default function SignupPage() {
 
     function enviarSign(event) {
         /* mensajes*/
-        if (contrasena == "") {
-            setMensajeContrasena("no valido")
+        if (clave == "") {
+            setMensajeClave("no valido")
         } else {
-            setMensajeContrasena("valido")
+            setMensajeClave("valido")
         }
         if (correo == "" || IncluyeCorreo() == true) {
             setMensajeCorreo("no valido")
@@ -74,21 +75,14 @@ export default function SignupPage() {
         } else {
             setMensajeUsuario("valido")
         }
-        /* pfp*/
-        if (pfp == ""){
-            setPfp("default.png")
-        } else if (pfp == "1") {
-            setPfp("pfp1.png")
-        } else if (pfp == "2") {
-            setPfp("pfp2.png")
-        } else if (pfp == "3") {
-            setPfp("pfp3.png")
-        } else if (pfp == "4") {
-            setPfp("pfp4.png")
+        if (pfp == "pfp1.png" || pfp == "pfp2.png" || pfp == "pfp3.png" || pfp == "pfp4.png" || pfp == "default.png") {
+            setMensajePfp("valido")
+        } else {
+            setMensajePfp("no valido")
         }
         /* comprobacion para el post*/
-        if (telefono !== "" && IncluyeTelefono() == false && usuario !== "" && contrasena !== "" && correo !== "" && IncluyeCorreo() == false){
-            //aca con post a la BDD
+        if (telefono !== "" && IncluyeTelefono() == false && usuario !== "" && clave !== "" && correo !== "" && IncluyeCorreo() == false && mensajePfp == "valido"){
+            fetch.registro({email: correo, nombre: usuario, numero: telefono, contrasena: clave, foto_perfil: pfp})
         }
     }
 
@@ -96,30 +90,31 @@ export default function SignupPage() {
         <>
             <input placeholder="Establezca un correo electronico" value={correo} onChange={(event)=>{setCorreo(event.target.value)}}></input>
             <p>{mensajeCorreo}</p>
-            <input placeholder="Establezca una contraseña" value={contrasena} onChange={(event)=>{setContrasena(event.target.value)}}></input>
-            <p>{mensajeContrasena}</p>
+            <input placeholder="Establezca una contraseña" value={clave} onChange={(event)=>{setclave(event.target.value)}}></input>
+            <p>{mensajeClave}</p>
             <input placeholder='Establezca un numero telefonico' value={telefono} onChange={(event)=>{setTelefono(event.target.value)}}></input>
             <p>{mensajeTelefono}</p>
             <input placeholder="Establezca un nombre de usuario" value={usuario} onChange={(event)=>{setUsuario(event.target.value)}}></input>
             <p>{mensajeUsuario}</p>
             <input placeholder="Establezca una foto de perfil segun su numero" value={pfp} onChange={(event)=>{setPfp(event.target.value)}}></input>
+            <p>{mensajePfp}</p>
 
             <div>
                 <div>
                     <img src='pfp1.png'></img>
-                    <p>1</p>
+                    <p>pfp1.png</p>
                 </div>
                 <div>
                     <img src='pfp2.png'></img>
-                    <p>2</p>
+                    <p>pfp2.png</p>
                 </div>
                 <div>
                     <img src='pfp3.png'></img>
-                    <p>3</p>
+                    <p>pfp3.png</p>
                 </div>
                 <div>
                     <img src='pfp4.png'></img>
-                    <p>4</p>
+                    <p>pfp4.png</p>
                 </div>
             </div>
 

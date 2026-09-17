@@ -127,7 +127,7 @@ app.post('/Registro', async function(req, res){
 		try {
 			console.log(req.body);
 			let existe = await MySQL.realizarQuery(`SELECT * FROM WhatsappUsuarios WHERE email = "${req.body.email}";`)
-			if (existe.length===0){e
+			if (existe.length===0){
 				await MySQL.realizarQuery(`INSERT INTO WhatsappUsuarios(email,nombre,numero,contrasena,foto_perfil)
 				VALUES ("${req.body.email}","${req.body.nombre}",${req.body.numero},"${req.body.contrasena}","${req.body.foto_perfil}");`)
 	
