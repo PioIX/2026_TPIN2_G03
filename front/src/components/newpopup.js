@@ -2,15 +2,16 @@ import styles from "@/components/newpopup.module.css";
 import clsx from "clsx";
 import Popup from 'reactjs-popup';
 
-export default function PopupExample({triggertext,children}){
+export default function NewPopup({triggertext,children}){
     return(
-  <Popup trigger={<button>{triggertext}</button>} position="top left">
+  <Popup trigger={<button>{triggertext}</button>} position="top left" modal nested className={styles.popup} >
     {close => (
-      <div>
+      <div className={styles.cont} >
+
         {children}
-        <a className="close" onClick={close}>
+        <button className={styles.cerrar} onClick={close}>
          Cerrar
-        </a>
+        </button>
       </div>
     )}
   </Popup>

@@ -16,6 +16,7 @@ const [chats,setChats]=useState([])
 const [grupos,setGrupos]=useState([])
 const [newChat,setNewChat]=useState("")
 
+
 const searchParams = useSearchParams();
 const userE = searchParams.get("usuario")
 
@@ -43,31 +44,60 @@ useEffect(()=>{
   grupos.map((grupo)=>{
       fetch.getGrupoPorID(grupo.grupo_id)
       .then((data)=>{
-          console.log(data[0])
-          setChats([...chats,data[0]])
+          if (data[0].nombre == userE){
+              setChats([...chats,otroMiembro(data[0])])
+          }else{
+            
+            console.log(data[0])
+            setChats([...chats,data[0]])
+          }
       })
   })
   setLoading(false)
 },[grupos,loading])
 
 
-function crearChat(single){
+function creacionChat(single){
   if(single){
     fetch.getUsuarioporEmail(newChat)
     .then((data)=>{
-      console.log(data)
+      console.log(data[0])
       if (!data || data.length===0){
-        //dar error
+        console.log("Error, no hay datos o datos incorrectos")
         return
       }else{
-        crearChat({nombre:data.nombre,foto:data.foto_perfil})
+        let dd= {nombre:data[0].nombre,foto:data[0].foto_perfil}
+        console.log("Datos mandados al fetch:")
+        console.log(dd)
+        fetch.crearChat(dd)
+        .then(
+          fetch.unirAlChat()
+        )
+
       }
     })
   }else{
-    //falta poder crear grupo y testear creación de chats + manejo de popups
+    //falta poder crear grupo y testear creación de chats + fetch post return id de grupo
   }
 }
 
+
+
+function otroMiembro(grupo){
+  fetch.getMiembrosDeGrupo(grupo.id)
+  .then((data)=>{
+    let otrous = data.filter(miembro => miembro.email!=userE)
+    fetch.getUsuarioporEmail(otrous)
+    .then((data)=>{
+      console.log("Otro usuario")
+      console.log(data)
+      return data
+    })
+    
+
+  })
+  
+}
 
 
   return (
@@ -79,11 +109,12 @@ function crearChat(single){
         ( <>
            <ChatList chats={chats}></ChatList>
            
-           <Newpopup triggertext={"trigger"} >
+           <Newpopup triggertext={"trigger"}>
           <h1>Ingresar el email del usuario</h1>
           <input placeholder="ejemplo@gmail.com" type="text" onChange={(event)=>{setNewChat(event.target.value)}} value={newChat}></input>
           <br></br>
-          <button onClick={()=>{crearChat(true)}}>Crear Chat</button>
+
+          <button onClick={()=>{creacionChat(true)}}>Crear Chat</button>
            <br></br>
            </Newpopup>
            </>)

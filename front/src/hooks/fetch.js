@@ -163,6 +163,7 @@ export function registro(usuario){
 
 export function crearChat(datos){
    try {
+    console.log(`Datos recibidos por fetch: ${JSON.stringify(datos)}`)
      return fetch('http://localhost:4000/Grupo', {
          method: 'POST',
          headers: {
@@ -176,7 +177,7 @@ export function crearChat(datos){
      });
    } catch (error) {
         console.log(error)
-   }
+   } 
 };
 
 export function crearMensaje(mensaje){
