@@ -38,67 +38,68 @@ useEffect(()=>{
     }
 },[loading])
 
-
+//arreglar useffect corriendo dos veces
 useEffect(()=>{
   console.log(grupos)
-  grupos.map((grupo)=>{
-      fetch.getGrupoPorID(grupo.grupo_id)
-      .then((data)=>{
-          if (data[0].nombre == userE){
-              setChats([...chats,otroMiembro(data[0])])
-          }else{
-            
-            console.log(data[0])
-            setChats([...chats,data[0]])
-          }
-      })
-  })
+  if (chats.length != grupos.length){
+    console.log("true")
+    setChats([])
+    grupos.map((grupo)=>{
+        fetch.getGrupoPorID(grupo.grupo_id)
+        .then((data)=>{ 
+              console.log(data[0])
+              setChats((prev)=>[...prev,data[0]])
+        })
+    })
+  console.log(chats)
   setLoading(false)
+  }else{
+  console.log(chats)
+  setLoading(false)
+  }
+  
 },[grupos,loading])
 
 
 function creacionChat(single){
   if(single){
-    fetch.getUsuarioporEmail(newChat)
+    let gruposEX;
+    fetch.getGrupos()
     .then((data)=>{
-      console.log(data[0])
-      if (!data || data.length===0){
-        console.log("Error, no hay datos o datos incorrectos")
-        return
-      }else{
-        let dd= {nombre:data[0].nombre,foto:data[0].foto_perfil}
-        console.log("Datos mandados al fetch:")
-        console.log(dd)
-        fetch.crearChat(dd)
-        .then(
-          fetch.unirAlChat()
-        )
+      console.log(data)
+      gruposEX=data.length
+    }).then(
 
-      }
-    })
+      fetch.getUsuarioporEmail(newChat)
+      .then((data)=>{
+        console.log(data[0])
+        if (!data || data.length===0){
+          console.log("Error, no hay datos o datos incorrectos")
+          return
+        }else{
+          let dd= {nombre:`${data[0].nombre} y ${usuario.nombre}`,foto:data[0].foto_perfil}
+          console.log("Datos mandados al fetch:")
+          console.log(dd)
+          fetch.crearChat(dd)
+          .then(
+            fetch.unirAlChat({email:userE,grupo_id:gruposEX+1})
+            
+            .then(
+              
+              fetch.unirAlChat({email:newChat,grupo_id:gruposEX+1})
+  
+            )
+            
+  
+          )
+  
+        }
+      })
+    )
   }else{
     //falta poder crear grupo y testear creación de chats + fetch post return id de grupo
   }
 }
-
-
-
-function otroMiembro(grupo){
-  fetch.getMiembrosDeGrupo(grupo.id)
-  .then((data)=>{
-    let otrous = data.filter(miembro => miembro.email!=userE)
-    fetch.getUsuarioporEmail(otrous)
-    .then((data)=>{
-      console.log("Otro usuario")
-      console.log(data)
-      return data
-    })
-    
-
-  })
-  
-}
-
 
   return (
     <>

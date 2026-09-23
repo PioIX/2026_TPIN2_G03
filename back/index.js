@@ -149,8 +149,10 @@ app.post('/Grupo', async function(req, res){
 		try {
 			console.log(req.body);
 			await MySQL.realizarQuery(`INSERT INTO Grupos(nombre,foto)
-			VALUES ("${req.body.nombre}","${req.body.foto}");`)
-	
+			VALUES ("${req.body.nombre}","${req.body.foto}");`, function (error,results,fields){
+				console.log(results.insertId)
+			})
+			
 			
 		} catch (error) {
 			console.log('Error:', error.message)
@@ -187,7 +189,7 @@ app.post('/UnirAlGrupo', async function(req, res){
 		try {
 			console.log(req.body);
 			let existe = await MySQL.realizarQuery(`SELECT * FROM UsuariosEnGrupo WHERE email = "${req.body.email}" AND grupo_id=${req.body.grupo_id};`)
-			if (existe.length===0){e
+			if (existe.length===0){
 				await MySQL.realizarQuery(`INSERT INTO UsuariosEnGrupo(email,grupo_id)
 				VALUES ("${req.body.email}",${req.body.grupo_id});`)
 	
