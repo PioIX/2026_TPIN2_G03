@@ -1,10 +1,7 @@
 "use client"
 
-import { useSearchParams} from "next/navigation";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import * as fetch from "@/hooks/fetch.js"
-import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
 export default function HomePage() {
@@ -52,10 +49,9 @@ export default function HomePage() {
       if (Array(String(arrayUsuarios[i].numero)).includes(String(telefono)) == true) {
         console.log("Hay un numero igual")
         return(true)
-      } else{
-        console.log("No hay un numero igual")
-        return(false)
       }
+      console.log("No hay un numero igual")
+      return(false)
     }
   }
   
@@ -103,8 +99,14 @@ export default function HomePage() {
       setMensajePfp("no valido")
     }
     /* comprobacion para el post*/
-    if (telefono !== "" && IncluyeTelefono() == false && usuario !== "" && clave !== "" && correo !== "" && IncluyeCorreo() == false && mensajePfp == "valido"){
-      fetch.registro({email: correo, nombre: usuario, numero: telefono, contrasena: clave, foto_perfil: pfp})
+    if (telefono !== "" && IncluyeTelefono() == false && usuario !== "" && clave !== "" && correo !== "" && IncluyeCorreo() == false && pfp == "pfp1.png" || pfp == "pfp2.png" || pfp == "pfp3.png" || pfp == "pfp4.png" || pfp == "default.png"){
+      fetch.registro({
+        email: correo,
+        nombre: usuario,
+        numero: telefono,
+        contrasena: clave,
+        foto_perfil: pfp
+      })
       userLogged()
     }
   }
@@ -130,16 +132,21 @@ export default function HomePage() {
 
   return (
     <>
+      <h2>Registrese llenando todos los campos, o bien inicie sesion con solo los primeros 2</h2>
+
       <input placeholder="Establezca un correo electronico" value={correo} onChange={(event)=>{setCorreo(event.target.value)}}></input>
       <p>{mensajeCorreo}</p>
       <input placeholder="Establezca una contraseña" value={clave} onChange={(event)=>{setclave(event.target.value)}}></input>
       <p>{mensajeClave}</p>
+      <hr></hr>
       <input placeholder='Establezca un numero telefonico' value={telefono} onChange={(event)=>{setTelefono(event.target.value)}}></input>
       <p>{mensajeTelefono}</p>
       <input placeholder="Establezca un nombre de usuario" value={usuario} onChange={(event)=>{setUsuario(event.target.value)}}></input>
       <p>{mensajeUsuario}</p>
       <input placeholder="Establezca una foto de perfil segun su numero" value={pfp} onChange={(event)=>{setPfp(event.target.value)}}></input>
       <p>{mensajePfp}</p>
+      <button onClick={enviarSign}>REGISTRAR</button>
+      <button onClick={enviarLogin}>LOGUEAR</button>
 
       <div>
         <div>
@@ -159,9 +166,6 @@ export default function HomePage() {
           <p>pfp4.png</p>
         </div>
       </div>
-
-      <button onClick={enviarSign}>REGISTRAR</button>
-      <button onClick={enviarLogin}>LOGUEAR</button>
     </>
   );
 }
