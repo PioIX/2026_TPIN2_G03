@@ -15,6 +15,14 @@ const [loading,setLoading]=useState(true)
 const [chats,setChats]=useState([])
 const [grupos,setGrupos]=useState([])
 const [newChat,setNewChat]=useState("")
+const [newMember,setNewMember]=useState("")
+const [groupName,setGroupName]=useState("")
+const [mensajeError,setMensajeError]=useState("")
+
+
+const [groupMembers,setGroupMembers]=useState([])
+
+
 
 
 const searchParams = useSearchParams();
@@ -41,9 +49,10 @@ useEffect(()=>{
 //arreglar useffect corriendo dos veces
 useEffect(()=>{
   console.log(grupos)
-  if (chats.length != grupos.length){
+  console.log(chats)
+  setset() 
+ if (chats.length != grupos.length){
     console.log("true")
-    setChats([])
     grupos.map((grupo)=>{
         fetch.getGrupoPorID(grupo.grupo_id)
         .then((data)=>{ 
@@ -60,6 +69,10 @@ useEffect(()=>{
   
 },[grupos,loading])
 
+function setset(){setChats([])
+}
+
+
 
 function creacionChat(single){
   if(single){
@@ -74,10 +87,12 @@ function creacionChat(single){
       .then((data)=>{
         console.log(data[0])
         if (!data || data.length===0){
+          setMensajeError("Error, no hay datos o datos incorrectos")
           console.log("Error, no hay datos o datos incorrectos")
           return
         }else{
-          let dd= {nombre:`${data[0].nombre} y ${usuario.nombre}`,foto:data[0].foto_perfil}
+          setMensajeError("")
+          let dd= {nombre:`${data[0].nombre} y ${usuario.nombre}`,foto:"/default.png"}
           console.log("Datos mandados al fetch:")
           console.log(dd)
           fetch.crearChat(dd)
@@ -86,8 +101,11 @@ function creacionChat(single){
             
             .then(
               
-              fetch.unirAlChat({email:newChat,grupo_id:gruposEX+1})
+            fetch.unirAlChat({email:newChat,grupo_id:gruposEX+1})
   
+            ).then(
+              setNewChat("")
+              //recargar o cerrar popup
             )
             
   
@@ -97,10 +115,53 @@ function creacionChat(single){
       })
     )
   }else{
-    //falta poder crear grupo y testear creación de chats + fetch post return id de grupo
+    let gruposEX;
+    let dd;
+    fetch.getGrupos()
+    .then((data)=>{
+      console.log(data)
+      gruposEX=data.length
+    }).then(
+      dd= {nombre:groupName,foto:"/default.png"},
+      console.log("Datos mandados al fetch:"),
+      console.log(dd),
+      fetch.crearChat(dd)
+      .then(fetch.unirAlChat({email:userE,grupo_id:gruposEX+1}))
+      
+    ).then(
+        groupMembers.map(member =>{
+          fetch.unirAlChat({email:member,grupo_id:gruposEX+1})
+        })
+
+      ).then(
+        setNewMember(""),
+        setGroupMembers([]),
+        setGroupName("")
+        //cerrar popup o recargar
+ 
+      )
+  
   }
 }
 
+
+
+function addNewMember(){
+fetch.getUsuarioporEmail(newMember)
+.then((data) =>{
+ if (!data || data.length===0){
+          setMensajeError("Error, usuario no existe")
+            console.log("Error, usuario no existe")
+            return
+}
+}
+).then(
+  setGroupMembers((prev) => {
+    setMensajeError(""),
+    [...prev,newMember]
+  })
+)
+}
   return (
     <>
     {(loading)?(<h1>Cargando....</h1>):
@@ -110,14 +171,33 @@ function creacionChat(single){
         ( <>
            <ChatList chats={chats}></ChatList>
            
-           <Newpopup triggertext={"trigger"}>
+          <Newpopup triggertext={"Nuevo chat"}>
           <h1>Ingresar el email del usuario</h1>
           <input placeholder="ejemplo@gmail.com" type="text" onChange={(event)=>{setNewChat(event.target.value)}} value={newChat}></input>
+          
           <br></br>
-
+          <p>{mensajeError}</p>
           <button onClick={()=>{creacionChat(true)}}>Crear Chat</button>
            <br></br>
            </Newpopup>
+
+          <Newpopup triggertext={"Nuevo grupo"}>
+          <input placeholder="Nombre del grupo" type="text" onChange={(event)=>{setGroupName(event.target.value)}} value={groupName}></input>
+          <h1>Ingresar el email de los miembros</h1>
+          <input placeholder="ejemplo@gmail.com" type="text" onChange={(event)=>{setNewMember(event.target.value)}} value={newMember}></input>
+          <br></br>
+
+          {(groupMembers) ? 
+          (<p>groupMembers</p>):
+          (<p>No hay miembros añadidos</p>)}
+          <p>{mensajeError}</p>
+
+          <button onClick={()=>{addNewMember()}}>Añadir</button>
+          <button onClick={()=>{creacionChat(false)}}>Crear Chat</button>
+
+           <br></br>
+           </Newpopup>
+           
            </>)
           
          
