@@ -1,6 +1,6 @@
 "use client"
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import ChatList from "@/components/chatList"
 import { useFormState } from "react-dom";
@@ -18,8 +18,6 @@ const [newChat,setNewChat]=useState("")
 const [newMember,setNewMember]=useState("")
 const [groupName,setGroupName]=useState("")
 const [mensajeError,setMensajeError]=useState("")
-
-
 const [groupMembers,setGroupMembers]=useState([])
 
 
@@ -29,6 +27,8 @@ const searchParams = useSearchParams();
 const userE = searchParams.get("usuario")
 
 useEffect(()=>{
+    console.log("PRIMER USEFFECT CORRIENDO")
+
     if(!searchParams.has("usuario")){setError(true); return}
     
     else{
@@ -48,26 +48,43 @@ useEffect(()=>{
 
 //arreglar useffect corriendo dos veces
 useEffect(()=>{
+  if (!loading) {
+    return
+  }
+  console.log("SEGUNDO USEFFECT CORRIENDO")
   console.log(grupos)
   console.log(chats)
   setset() 
+  console.log(chats)
+
  if (chats.length != grupos.length){
     console.log("true")
-    grupos.map((grupo)=>{
+    console.log(grupos)
+    grupos.map((grupo,i)=>{
+      console.log(i)
         fetch.getGrupoPorID(grupo.grupo_id)
         .then((data)=>{ 
               console.log(data[0])
+
               setChats((prev)=>[...prev,data[0]])
-        })
+            if (i == grupos.length - 1) {
+              setLoading(false)
+            }    
+        }).then(()=>{
+          console.log(chats)
+          })
     })
-  console.log(chats)
-  setLoading(false)
-  }else{
-  console.log(chats)
-  setLoading(false)
   }
   
 },[grupos,loading])
+
+
+useEffect(()=>{
+  console.log("usc")
+console.log(groupMembers)
+},[groupMembers])
+
+
 
 function setset(){setChats([])
 }
@@ -115,32 +132,43 @@ function creacionChat(single){
       })
     )
   }else{
-    let gruposEX;
-    let dd;
-    fetch.getGrupos()
-    .then((data)=>{
-      console.log(data)
-      gruposEX=data.length
-    }).then(
-      dd= {nombre:groupName,foto:"/default.png"},
-      console.log("Datos mandados al fetch:"),
-      console.log(dd),
-      fetch.crearChat(dd)
-      .then(fetch.unirAlChat({email:userE,grupo_id:gruposEX+1}))
-      
-    ).then(
+    if(groupName){
+      let gruposEX;
+      let dd;
+      fetch.getGrupos()
+      .then((data)=>{
+        console.log(data)
+        gruposEX=data.length
+      }).then(()=>{
+
+        dd= {nombre:groupName,foto:"/default.png"}
+        console.log("Datos mandados al fetch:")
+        console.log(dd)
+        fetch.crearChat(dd)
+        .then(()=>{fetch.unirAlChat({email:userE,grupo_id:gruposEX+1})})
+      }
+        
+      ).then(()=>{
+
         groupMembers.map(member =>{
           fetch.unirAlChat({email:member,grupo_id:gruposEX+1})
         })
 
-      ).then(
-        setNewMember(""),
-        setGroupMembers([]),
-        setGroupName("")
-        //cerrar popup o recargar
- 
-      )
-  
+      }
+        ).then(()=>{
+
+          setNewMember(""),
+          setGroupMembers([]),
+          setGroupName("")
+          //cerrar popup o recargar
+   
+        }
+        )
+    
+
+    }else{
+      setMensajeError("Rellene todos los campos")
+    }
   }
 }
 
@@ -155,11 +183,14 @@ fetch.getUsuarioporEmail(newMember)
             return
 }
 }
-).then(
-  setGroupMembers((prev) => {
-    setMensajeError(""),
+).then(()=>{
+  console.log(newMember)
+  console.log(groupMembers)
+  setMensajeError("")
+  setGroupMembers((prev) => 
     [...prev,newMember]
-  })
+  )
+}
 )
 }
   return (
@@ -182,17 +213,19 @@ fetch.getUsuarioporEmail(newMember)
            </Newpopup>
 
           <Newpopup triggertext={"Nuevo grupo"}>
+          <h2>Nuevo grupo</h2>
           <input placeholder="Nombre del grupo" type="text" onChange={(event)=>{setGroupName(event.target.value)}} value={groupName}></input>
-          <h1>Ingresar el email de los miembros</h1>
+          <p>Ingresar el email de los miembros</p>
           <input placeholder="ejemplo@gmail.com" type="text" onChange={(event)=>{setNewMember(event.target.value)}} value={newMember}></input>
           <br></br>
 
           {(groupMembers) ? 
-          (<p>groupMembers</p>):
+          //añadir un mejor render para groupmemeçbers
+          (<p>{groupMembers}</p>):
           (<p>No hay miembros añadidos</p>)}
           <p>{mensajeError}</p>
 
-          <button onClick={()=>{addNewMember()}}>Añadir</button>
+          <button onClick={()=>{addNewMember()}}>Añadir miembro</button>
           <button onClick={()=>{creacionChat(false)}}>Crear Chat</button>
 
            <br></br>
