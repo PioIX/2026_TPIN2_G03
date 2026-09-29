@@ -94,12 +94,6 @@ function setset(){setChats([])
 function creacionChat(single){
   if(single){
     let gruposEX;
-    fetch.getGrupos()
-    .then((data)=>{
-      console.log(data)
-      gruposEX=data.length
-    }).then(
-
       fetch.getUsuarioporEmail(newChat)
       .then((data)=>{
         console.log(data[0])
@@ -113,59 +107,56 @@ function creacionChat(single){
           console.log("Datos mandados al fetch:")
           console.log(dd)
           fetch.crearChat(dd)
-          .then(
-            fetch.unirAlChat({email:userE,grupo_id:gruposEX+1})
-            
-            .then(
-              
-            fetch.unirAlChat({email:newChat,grupo_id:gruposEX+1})
-  
-            ).then(
+          .then((data)=>{
+            console.log(data)
+            gruposEX=data
+          })
+          .then(()=>{
+            fetch.unirAlChat({email:userE,grupo_id:gruposEX})
+          })
+          .then(()=>{
+            fetch.unirAlChat({email:newChat,grupo_id:gruposEX})
+          }).then(()=>{
+
               setNewChat("")
+              console.log('chat set')
               //recargar o cerrar popup
+            }
             )
             
   
-          )
+          
   
         }
       })
-    )
+    
   }else{
-    if(groupName){
+    if(groupName && groupMembers.length!=0){
       let gruposEX;
       let dd;
-      fetch.getGrupos()
-      .then((data)=>{
-        console.log(data)
-        gruposEX=data.length
-      }).then(()=>{
-
         dd= {nombre:groupName,foto:"/default.png"}
         console.log("Datos mandados al fetch:")
         console.log(dd)
         fetch.crearChat(dd)
-        .then(()=>{fetch.unirAlChat({email:userE,grupo_id:gruposEX+1})})
-      }
-        
-      ).then(()=>{
-
-        groupMembers.map(member =>{
-          fetch.unirAlChat({email:member,grupo_id:gruposEX+1})
+        .then((data)=>{
+          gruposEX=data
+          console.log('adduser')
+          fetch.unirAlChat({email:userE,grupo_id:gruposEX})
+          .then(
+              console.log('then'),
+              groupMembers.map(member =>{
+              console.log('map')
+              fetch.unirAlChat({email:member,grupo_id:gruposEX})
+              }))
+            .then(()=>{
+            console.log("creacion terminada")
+            setNewMember(""),
+            setGroupMembers([]),
+            setGroupName("")
+            //cerrar popup o recargar
+          }
+          )
         })
-
-      }
-        ).then(()=>{
-
-          setNewMember(""),
-          setGroupMembers([]),
-          setGroupName("")
-          //cerrar popup o recargar
-   
-        }
-        )
-    
-
     }else{
       setMensajeError("Rellene todos los campos")
     }
@@ -175,24 +166,35 @@ function creacionChat(single){
 
 
 function addNewMember(){
-fetch.getUsuarioporEmail(newMember)
-.then((data) =>{
- if (!data || data.length===0){
-          setMensajeError("Error, usuario no existe")
-            console.log("Error, usuario no existe")
-            return
+  if (newMember && newMember!=userE && !groupMembers.includes(newMember)){
+
+    fetch.getUsuarioporEmail(newMember)
+    .then((data) =>{
+     if (!data || data.length===0){
+      console.log(data)
+              setMensajeError("Error, usuario no existe")
+              console.log("Error, usuario no existe")
+              return
+    }else{
+      console.log(newMember)
+      console.log(groupMembers)
+      setMensajeError("")
+      setGroupMembers((prev) => 
+        [...prev,newMember]
+      )
+    }
+    }
+    )
+
+  }else{
+    setMensajeError('Dato inválido')
+  }
+
 }
-}
-).then(()=>{
-  console.log(newMember)
-  console.log(groupMembers)
-  setMensajeError("")
-  setGroupMembers((prev) => 
-    [...prev,newMember]
-  )
-}
-)
-}
+
+
+
+
   return (
     <>
     {(loading)?(<h1>Cargando....</h1>):
@@ -230,7 +232,6 @@ fetch.getUsuarioporEmail(newMember)
 
            <br></br>
            </Newpopup>
-           
            </>)
           
          

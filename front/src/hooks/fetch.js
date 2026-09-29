@@ -1,5 +1,16 @@
 "use client"
 
+export function getProxID(tabla){
+        return fetch(`http://localhost:4000/proxid?tabla=${tabla}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); 
+            return data.message
+    });
+}
+
+
+
 export function getUsuarios(){
         return fetch('http://localhost:4000/usuarios')
         .then(response => response.json())
@@ -174,7 +185,9 @@ export function crearChat(datos){
      .then(response => response.json())
      .then(data => {
      console.log('Chat creado:', data);
+     return data.message
      });
+     
    } catch (error) {
         console.log(error)
    } 
