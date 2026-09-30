@@ -1,17 +1,17 @@
 import clsx from "clsx";
 import styles from "@/components/chatItem.module.css";
 //arreglar module not found
-export default function chatItem({foto,nombre}) {
+export default function chatItem({foto,nombre,selectChat}) {
 
   return (
     <>
     {
         (foto) ? (
 
-            <img src={foto} className={styles.pfp}></img>
+           <a onClick={selectChat}><img src={foto} className={styles.pfp}></img></a>
 
         ):(
-            <img src="@/public/default.png" className={styles.pfp}></img>
+            <a onClick={selectChat}><img src="@/public/default.png" className={styles.pfp}></img></a>
   
         ) 
 

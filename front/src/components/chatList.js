@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import ChatItem from "@/components/chatItem";
 
-export default function chatList({chats}) {
+export default function chatList({chats ,selectChat}) {
     const chatJSX=chats.map((chat, ind)=>(
-        <ChatItem foto={chat.foto} nombre={chat.nombre} key={ind}></ChatItem>
+        <ChatItem foto={chat.foto} nombre={chat.nombre} key={ind} selectChat={()=>{selectChat(ind)}}></ChatItem>
 
     ))
   return (

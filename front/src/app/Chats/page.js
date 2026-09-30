@@ -1,14 +1,14 @@
 "use client"
 import { useSearchParams, useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
-import Link from "next/link";
 import ChatList from "@/components/chatList"
-import { useFormState } from "react-dom";
 import * as fetch from "@/hooks/fetch.js"
 import Newpopup from '@/components/newpopup';
 
 export default function ChatPage() {
-    
+const [open1,setOpen1]=useState(false)
+const [open2,setOpen2]=useState(false)
+
 const [error,setError]=useState(false)
 const [usuario,setUsuario]=useState({})
 const [loading,setLoading]=useState(true)
@@ -22,7 +22,7 @@ const [groupMembers,setGroupMembers]=useState([])
 
 
 
-
+const router=useRouter()
 const searchParams = useSearchParams();
 const userE = searchParams.get("usuario")
 
@@ -46,7 +46,6 @@ useEffect(()=>{
     }
 },[loading])
 
-//arreglar useffect corriendo dos veces
 useEffect(()=>{
   if (!loading) {
     return
@@ -116,14 +115,13 @@ function creacionChat(single){
           })
           .then(()=>{
             fetch.unirAlChat({email:newChat,grupo_id:gruposEX})
-          }).then(()=>{
-
               setNewChat("")
               console.log('chat set')
-              //recargar o cerrar popup
-            }
-            )
+              setOpen1(false)
+              setLoading(true)
+          
             
+            })
   
           
   
@@ -144,19 +142,24 @@ function creacionChat(single){
           fetch.unirAlChat({email:userE,grupo_id:gruposEX})
           .then(
               console.log('then'),
-              groupMembers.map(member =>{
+              groupMembers.map((member,i) =>{
               console.log('map')
               fetch.unirAlChat({email:member,grupo_id:gruposEX})
-              }))
-            .then(()=>{
-            console.log("creacion terminada")
-            setNewMember(""),
-            setGroupMembers([]),
-            setGroupName("")
-            //cerrar popup o recargar
-          }
-          )
-        })
+                if (i==groupMembers.length-1){
+                  console.log("creacion terminada")
+                  setNewMember(""),
+                  setGroupMembers([]),
+                  setGroupName("")
+                  setOpen2(false)
+                  setLoading(true)
+                }
+              }
+            )
+            )
+
+        }
+        )
+        
     }else{
       setMensajeError("Rellene todos los campos")
     }
@@ -192,6 +195,9 @@ function addNewMember(){
 
 }
 
+function selectChat(chatind){
+  router.push(`/IndChat?chat=${grupos[chatind].grupo_id}`)
+}
 
 
 
@@ -202,9 +208,9 @@ function addNewMember(){
         (error)?
         (<h1>Hubo un error</h1>):
         ( <>
-           <ChatList chats={chats}></ChatList>
+           <ChatList chats={chats} selectChat={selectChat}></ChatList>
            
-          <Newpopup triggertext={"Nuevo chat"}>
+          <Newpopup triggertext={"Nuevo chat"} open={open1} setOpen={setOpen1}>
           <h1>Ingresar el email del usuario</h1>
           <input placeholder="ejemplo@gmail.com" type="text" onChange={(event)=>{setNewChat(event.target.value)}} value={newChat}></input>
           
@@ -214,7 +220,7 @@ function addNewMember(){
            <br></br>
            </Newpopup>
 
-          <Newpopup triggertext={"Nuevo grupo"}>
+          <Newpopup triggertext={"Nuevo grupo"} open={open2} setOpen={setOpen2}>
           <h2>Nuevo grupo</h2>
           <input placeholder="Nombre del grupo" type="text" onChange={(event)=>{setGroupName(event.target.value)}} value={groupName}></input>
           <p>Ingresar el email de los miembros</p>
