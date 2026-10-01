@@ -1,5 +1,16 @@
 "use client"
 
+export function getProxID(tabla){
+        return fetch(`http://localhost:4000/proxid?tabla=${tabla}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); 
+            return data.message
+    });
+}
+
+
+
 export function getUsuarios(){
         return fetch('http://localhost:4000/usuarios')
         .then(response => response.json())
@@ -163,6 +174,7 @@ export function registro(usuario){
 
 export function crearChat(datos){
    try {
+    console.log(`Datos recibidos por fetch: ${JSON.stringify(datos)}`)
      return fetch('http://localhost:4000/Grupo', {
          method: 'POST',
          headers: {
@@ -173,10 +185,12 @@ export function crearChat(datos){
      .then(response => response.json())
      .then(data => {
      console.log('Chat creado:', data);
+     return data.message
      });
+     
    } catch (error) {
         console.log(error)
-   }
+   } 
 };
 
 export function crearMensaje(mensaje){

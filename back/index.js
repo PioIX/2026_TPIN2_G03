@@ -18,6 +18,26 @@ app.get('/', function(req, res){
 	});
 });
 
+
+app.get('/proxid', async function(req, res){
+	try {
+		let tabla = req.query.tabla
+		if(tabla){
+			await connection.query(`ANALYZE TABLE '2026_5INF_G03'.${tabla}`);
+			await MySQL.realizarQuery('SET information_schema_stats_expiry = 0;')
+			let resp= await MySQL.realizarQuery(`SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '2026_5INF_G03' AND TABLE_NAME = '${tabla}';`)
+			console.log(resp)
+			  res.status(200).send({
+				  message: resp[0]
+			  });
+		}
+	} catch (error) {
+		res.status(500).send({
+			message: "error"
+		})
+	}
+});
+
 app.get('/Usuarios', async function(req, res){
 	try {
 		let email=req.query.email
@@ -148,9 +168,11 @@ app.post('/Registro', async function(req, res){
 app.post('/Grupo', async function(req, res){
 		try {
 			console.log(req.body);
-			await MySQL.realizarQuery(`INSERT INTO Grupos(nombre,foto)
+			const result =await MySQL.realizarQuery(`INSERT INTO Grupos(nombre,foto)
 			VALUES ("${req.body.nombre}","${req.body.foto}");`)
-	
+			const newID = result.insertId
+			console.log(newID);
+			res.send({message: newID});
 			
 		} catch (error) {
 			console.log('Error:', error.message)
@@ -158,7 +180,7 @@ app.post('/Grupo', async function(req, res){
 				message: "Error al crear el grupo"
 			});
 
-	}
+		}
 
 
 });
@@ -187,7 +209,7 @@ app.post('/UnirAlGrupo', async function(req, res){
 		try {
 			console.log(req.body);
 			let existe = await MySQL.realizarQuery(`SELECT * FROM UsuariosEnGrupo WHERE email = "${req.body.email}" AND grupo_id=${req.body.grupo_id};`)
-			if (existe.length===0){e
+			if (existe.length===0){
 				await MySQL.realizarQuery(`INSERT INTO UsuariosEnGrupo(email,grupo_id)
 				VALUES ("${req.body.email}",${req.body.grupo_id});`)
 	
