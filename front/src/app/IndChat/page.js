@@ -16,13 +16,28 @@ export default function IndChatPage(){
 
     useEffect(()=>{
     if (!socket) return;
+    console.log("Web socket conectado")
 
+     socket.on("pingAll", (data) => {
+            console.log(data);
+            setMensajes(prev => [...prev,data])
+        });
+
+        socket.on("emitcontador",(data)=>{
+            console.log(data)
+            setContador(data.contador)
+        });
     },[socket])
 
     return(
         <>
         <h1>Hola soy el chat</h1>
         <p>{chat}</p>
+        {(isConnected)?
+        (<p>Socket conectado</p>):
+        (<p>Socket desconectado</p>)
+        }
+         <button onClick={()=>{socket.emit("pingAll", { msg: "Hola desde mi compu" })}}>Enviar ping a todos</button>
         </>
     )
 }
