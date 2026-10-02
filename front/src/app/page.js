@@ -68,7 +68,7 @@ export default function HomePage() {
   }
 
   const userLogged = () => {
-    router.push(`/chats?usuario=${correo}`);
+    router.push(`/Chats?usuario=${correo}`);
   };
 
   function enviarSign(event) {

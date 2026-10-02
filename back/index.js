@@ -29,8 +29,8 @@ const io = new Server(server, {
 	origin: ["http://localhost:3000", "http://localhost:3001"],
 	methods: ["GET", "POST", "PUT", "DELETE"],
 	credentials: true,
-	path: "/api/socketio",
-	addTrailingSlash: false,
+	//path: "/api/socketio",
+	//addTrailingSlash: false,
   },
 });
 
@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
 	req.session.room = data.room;
 	socket.join(req.session.room);
 
-	io.to(req.session.room).emit("chat-messages", {
+	io.to(req.session.room).emit("inf", {
 	  user: req.session.user,
 	  room: req.session.room,
 	});
@@ -64,9 +64,11 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", (data) => {
 	console.log("Message recieved")
+	console.log(data.message)
 	io.to(req.session.room).emit("newMessage", {
 	  room: req.session.room,
 	  message: data.message,
+	  
 	});
   });
 
