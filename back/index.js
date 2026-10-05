@@ -68,6 +68,7 @@ io.on("connection", (socket) => {
 	io.to(req.session.room).emit("newMessage", {
 	  room: req.session.room,
 	  message: data.message,
+	  email:data.email
 	  
 	});
   });
@@ -172,7 +173,7 @@ app.get('/Mensajes', async function(req, res){
 			resp= await MySQL.realizarQuery(`SELECT * FROM Mensajes WHERE id=${id};`)
 
 		}else if(grupo_id){
-			resp= await MySQL.realizarQuery(`SELECT * FROM Mensajes WHERE grupo_id="${grupo_id}";`)
+			resp= await MySQL.realizarQuery(`SELECT contenido, email,grupo_id FROM Mensajes WHERE grupo_id="${grupo_id}";`)
 		}else if(cont){
 
 			resp= await MySQL.realizarQuery(`SELECT * FROM Mensajes WHERE contenido LIKE "@${cont}@";`)
