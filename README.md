@@ -14,3 +14,7 @@ npm run dev (con los profijos correspondientes)
 
 El frontend queda disponible en http://localhost:3000; la API y el 
 socket se inician en el puerto 4000.
+
+## Usuario de ejemplo:
+Email: c@gmail.com
+Contraseña: c
