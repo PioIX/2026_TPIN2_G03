@@ -68,7 +68,7 @@ export default function HomePage() {
   }
 
   const userLogged = () => {
-    router.push(`/Chats?usuario=${correo}`);
+    router.push(`/chats?usuario=${correo}`);
   };
 
   function enviarSign(event) {
@@ -132,6 +132,7 @@ export default function HomePage() {
 
   return (
     <>
+      <h1 className="title">PiosApp</h1>
       <h2>Registrese llenando todos los campos, o bien inicie sesion con solo los primeros 2</h2>
 
       <input placeholder="Establezca un correo electronico" value={correo} onChange={(event)=>{setCorreo(event.target.value)}}></input>
@@ -143,7 +144,13 @@ export default function HomePage() {
       <p>{mensajeTelefono}</p>
       <input placeholder="Establezca un nombre de usuario" value={usuario} onChange={(event)=>{setUsuario(event.target.value)}}></input>
       <p>{mensajeUsuario}</p>
-      <input placeholder="Establezca una foto de perfil segun su numero" value={pfp} onChange={(event)=>{setPfp(event.target.value)}}></input>
+      <select placeholder="Establezca una foto de perfil segun su numero" onChange={(event)=>{setPfp(event.target.value)}}>
+        <option value="pfp1.png">1</option>
+        <option value="pfp2.png">2</option>
+        <option value="pfp3.png">3</option>
+        <option value="pfp4.png">4</option>
+        <option value="default.png">Default</option>
+      </select>
       <p>{mensajePfp}</p>
       <button onClick={enviarSign}>REGISTRAR</button>
       <button onClick={enviarLogin}>LOGUEAR</button>

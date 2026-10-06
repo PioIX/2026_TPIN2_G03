@@ -19,6 +19,7 @@ const [newMember,setNewMember]=useState("")
 const [groupName,setGroupName]=useState("")
 const [mensajeError,setMensajeError]=useState("")
 const [groupMembers,setGroupMembers]=useState([])
+const [pfp,setPfp]=useState("")
 
 
 
@@ -132,7 +133,7 @@ function creacionChat(single){
     if(groupName && groupMembers.length!=0){
       let gruposEX;
       let dd;
-        dd= {nombre:groupName,foto:"/default.png"}
+        dd= {nombre:groupName,foto:pfp}
         console.log("Datos mandados al fetch:")
         console.log(dd)
         fetch.crearChat(dd)
@@ -211,7 +212,7 @@ function selectChat(chatind){
         ( <>
           <header>
           <p>Usuario: {usuario.nombre}</p>
-          <img src={usuario.foto_perfil}></img>
+          <img src={usuario.foto_perfil} className="userpfp"></img>
           </header>
           
            <ChatList chats={chats} selectChat={selectChat}></ChatList>
@@ -238,7 +239,14 @@ function selectChat(chatind){
           (<p>{groupMembers}</p>):
           (<p>No hay miembros añadidos</p>)}
           <p>{mensajeError}</p>
-
+          <p>Foto de perfil (iguales que en el registro): </p>
+        <select placeholder="Establezca una foto de perfil segun su numero" onChange={(event)=>{setPfp(event.target.value); console.log(event.target.value)}}>
+        <option value="pfp1.png">1</option>
+        <option value="pfp2.png">2</option>
+        <option value="pfp3.png">3</option>
+        <option value="pfp4.png">4</option>
+        <option value="default.png">Default</option>
+          </select>
           <button onClick={()=>{addNewMember()}}>Añadir miembro</button>
           <button onClick={()=>{creacionChat(false)}}>Crear Chat</button>
 

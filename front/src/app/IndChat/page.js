@@ -95,7 +95,6 @@ export default function IndChatPage() {
 
                             <input onChange={(e) => { setNewMsg(e.target.value) }} value={newMsg}></input>
                             <button onClick={() => { socket.emit("sendMessage", { message: newMsg, email: userE }); fetch.crearMensaje({ grupo_id: chat, email: userE, contenido: newMsg }); }}>Enviar mensaje</button>
-                            <button onClick={() => { console.log(msgHistory) }}>Ver Mesansajes History</button>
                         </>
                         ) :
                         (<p>Socket desconectado</p>)

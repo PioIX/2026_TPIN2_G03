@@ -10,7 +10,10 @@ export default function chatList({chats ,selectChat}) {
     <>
     {
         (chats.length!=0) ? (
-            chatJSX
+            <section className="chatSec">
+
+                {chatJSX}
+            </section>
         ):(
             <p>No hay chats</p>
         ) 

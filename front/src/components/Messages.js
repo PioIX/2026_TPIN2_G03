@@ -14,7 +14,11 @@ export default function Messages({ msgArray }) {
     <div className="messagediv">
 
       {msgArray && msgArray.length > 0 && msgArray.map((m,i)=>(
-            <p key={i} className="message">{m.email}<br></br>{m.contenido}</p>
+            <span key={i} className="message">
+            <p key={i} className="text">{m.email}</p>
+              <br></br>
+              <p>{m.contenido}</p>
+            </span>
         ))}
     </div>
   )
