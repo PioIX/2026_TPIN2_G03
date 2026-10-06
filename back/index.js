@@ -1,15 +1,90 @@
 var express = require('express'); //Tipo de servidor: Express
 var bodyParser = require('body-parser'); //Convierte los JSON
 var cors = require('cors');
+const session = require("express-session");
 const MySQL = require('./modulos/mysql');
+const app = express();
+const PORT = process.env.PORT || 4000;
+const { Server } = require("socket.io");
 
-var app = express();
-var port = process.env.PORT || 4000;
+
 app.use(cors());
-
-
+app.use(express.json());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+
+/*SOCKET*/ 
+const sessionMiddleware = session({
+  secret: "supersarasa",
+  resave: false,
+  saveUninitialized: false,
+});
+app.use(sessionMiddleware);
+const server = app.listen(PORT, () => {
+  console.log(`Servidor NodeJS corriendo en http://localhost:${PORT}/`);
+});
+
+const io = new Server(server, {
+  cors: {
+	origin: ["http://localhost:3000", "http://localhost:3001"],
+	methods: ["GET", "POST", "PUT", "DELETE"],
+	credentials: true,
+	//path: "/api/socketio",
+	//addTrailingSlash: false,
+  },
+});
+
+
+io.use((socket, next) => {
+  sessionMiddleware(socket.request, {}, next);
+});
+
+
+io.on("connection", (socket) => {
+	console.log('connection')
+  const req = socket.request;
+
+  socket.on("joinRoom", (data) => {
+	if (req.session.room != undefined && req.session.room.length > 0) {
+	  socket.leave(req.session.room);
+	}
+	req.session.room = data.room;
+	socket.join(req.session.room);
+
+	io.to(req.session.room).emit("inf", {
+	  user: req.session.user,
+	  room: req.session.room,
+	});
+  });
+
+  socket.on("pingAll", (data) => {
+	console.log("PING ALL:", data);
+	io.emit("pingAll", { event: "Ping to all", message: data });
+  });
+
+  socket.on("sendMessage", (data) => {
+	console.log("Message recieved")
+	console.log(data.message)
+	io.to(req.session.room).emit("newMessage", {
+	  room: req.session.room,
+	  message: data.message,
+	  email:data.email
+	  
+	});
+  });
+
+
+  socket.on("disconnect", () => {
+	console.log("Disconnect");
+  });
+});
+
+
+
+
+/*MYSQL*/ 
+
+
 
 
 app.get('/', function(req, res){
@@ -98,7 +173,7 @@ app.get('/Mensajes', async function(req, res){
 			resp= await MySQL.realizarQuery(`SELECT * FROM Mensajes WHERE id=${id};`)
 
 		}else if(grupo_id){
-			resp= await MySQL.realizarQuery(`SELECT * FROM Mensajes WHERE grupo_id="${grupo_id}";`)
+			resp= await MySQL.realizarQuery(`SELECT contenido, email,grupo_id FROM Mensajes WHERE grupo_id="${grupo_id}";`)
 		}else if(cont){
 
 			resp= await MySQL.realizarQuery(`SELECT * FROM Mensajes WHERE contenido LIKE "@${cont}@";`)
@@ -336,10 +411,4 @@ try {
 		message: "Error"
 	});
 }
-});
-
-app.listen(port, function(){
-	console.log(`Server running in http://localhost:${port}`);
-	console.log('Defined routes:');
-	console.log('[GET] http://localhost:4000/');
 });

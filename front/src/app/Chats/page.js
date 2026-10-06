@@ -196,18 +196,24 @@ function addNewMember(){
 }
 
 function selectChat(chatind){
-  router.push(`/IndChat?chat=${grupos[chatind].grupo_id}`)
+  router.push(`/IndChat?chat=${grupos[chatind].grupo_id}&usuario=${userE}`)
 }
 
 
 
   return (
     <>
+
     {(loading)?(<h1>Cargando....</h1>):
     (
         (error)?
         (<h1>Hubo un error</h1>):
         ( <>
+          <header>
+          <p>Usuario: {usuario.nombre}</p>
+          <img src={usuario.foto_perfil}></img>
+          </header>
+          
            <ChatList chats={chats} selectChat={selectChat}></ChatList>
            
           <Newpopup triggertext={"Nuevo chat"} open={open1} setOpen={setOpen1}>
@@ -238,6 +244,7 @@ function selectChat(chatind){
 
            <br></br>
            </Newpopup>
+
            </>)
           
          
