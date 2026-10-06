@@ -1,7 +1,7 @@
 :root {
-  --fondo: #0011ff;
-  --texto: #1c1740;
-  --acento: #e08600;
+  --fondo: #ececec;
+  --texto: #1d1d1d;
+  --acento: #00a11b;
 }
 
 * {
@@ -85,6 +85,7 @@ input {
   border-radius: 12px;
   color: inherit;
   font: inherit;
+  margin-bottom: 10px;
 }
 
 input:focus {
@@ -95,6 +96,7 @@ input:focus {
 button {
   width: 100%;
   padding: 12px;
+  margin: 3px;
   border: 0;
   border-radius: 12px;
   background: var(--acento);
@@ -147,7 +149,7 @@ body > div:not(#popup-root) img {
 
 .popup-content .cont {
   align-items: stretch;
-  gap: 12px;
+  gap: 24px;
 }
 
 .popup-content h1,
