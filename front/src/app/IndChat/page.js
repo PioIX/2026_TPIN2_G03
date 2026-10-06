@@ -16,8 +16,7 @@ export default function IndChatPage() {
     const [newMsg, setNewMsg] = useState("")
     const [msgHistory, setMsgHistory] = useState([])
     const [loading, setLoading] = useState(true)
-    const [aux, setAux] = useState(false)
-    const [msgJSX, setMsgJSX] = useState([])
+    const [miembrosJSX, setMiembrosJSX] = useState([])
     const userE = searchParams.get("usuario")
 
 
@@ -27,7 +26,22 @@ export default function IndChatPage() {
             .then((data) => {
                 setMsgHistory(data)
             })
-            .then(setLoading(false))
+            .then(
+                fetch.getMiembrosDeGrupo(chat)
+                .then((data)=>{
+                    console.log("aaaaaaaaaaa")
+                    console.log(data)
+                    let aux= data.map((miembro,i)=>(
+                            <p key={i}>{miembro.email}</p>
+                        ))
+                    console.log(aux)
+                    setMiembrosJSX(aux)
+                })
+                .then(
+                setLoading(false)
+                )
+            )
+        
     }, [])
 
     useEffect(() => {
@@ -51,32 +65,17 @@ export default function IndChatPage() {
 
         });
         socket.on("newMessage", (data) => {
-            //setAux(true)
             console.log(data)
             console.log(msgHistory)
             setMsgHistory((prev) => { return [...prev, { contenido: data.message, email: data.email, grupo_id: data.room }] })
             setNewMsg("")
             console.log({ contenido: data.message, email: data.email, grupo_id: data.room })
-            //setMsgJSX({contenido:data.message,email:data.email,grupo_id:data.room})
 
 
         });
     }, [socket])
 
-    useEffect(() => {
-        console.log(msgHistory)
-        console.log(msgJSX)
-        if (msgJSX != "" && aux) {
-            setMsgHistory((prev) => { [...prev, { contenido: "ss", email: "a", grupo_id: 1 }] })
-            setAux(false)
-
-        }
-    }, [msgJSX])
-
-    useEffect(() => {
-        console.log(msgHistory)
-    }, [msgHistory])
-
+   
     return (
         <>
             {(loading) ? (
@@ -84,8 +83,8 @@ export default function IndChatPage() {
             ) : (
                 <>
 
-                    <h1>Hola soy el chat</h1>
-                    <p>{chat}</p>
+                    <h2>Usuarios en el chat:</h2>
+                    {miembrosJSX}
                     {(isConnected) ?
                         (<>
 

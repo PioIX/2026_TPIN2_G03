@@ -11,7 +11,7 @@ export default function Messages({ msgArray }) {
     },[msgArray])
 
   return (
-    <div>
+    <div className="messagediv">
 
       {msgArray && msgArray.length > 0 && msgArray.map((m,i)=>(
             <p key={i} className="message">{m.email}<br></br>{m.contenido}</p>
